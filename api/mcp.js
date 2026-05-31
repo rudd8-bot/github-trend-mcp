@@ -177,7 +177,10 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(200).end();
 
-  if (req.method === "GET") {
+  const url = new URL(req.url, `https://${req.headers.host}`);
+  const path = url.pathname.replace(/^\/api\/mcp/, "");
+
+  if (req.method === "GET" && path === "") {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
@@ -194,7 +197,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method === "POST") {
+  if (req.method === "POST" && path === "") {
     try {
       const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
       const result = await handleMCP(body);
