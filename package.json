@@ -1,0 +1,9 @@
+{
+  "name": "github-trend-mcp",
+  "version": "1.0.0",
+  "description": "GitHub AI 트렌드 MCP 서버 for Ricky",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
