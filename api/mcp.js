@@ -178,13 +178,6 @@ export default async function handler(req, res) {
 
   if (req.method === "OPTIONS") return res.status(200).end();
 
-  // 인증 검증
-  const secret = process.env.MCP_SECRET;
-  const authHeader = req.headers["authorization"];
-  if (secret && authHeader !== `Bearer ${secret}`) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const url = new URL(req.url, `https://${req.headers.host}`);
   const path = url.pathname.replace(/^\/api\/mcp/, "");
 
