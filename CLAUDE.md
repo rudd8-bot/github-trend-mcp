@@ -20,3 +20,13 @@ Vercel 자동 배포 (GitHub `main` 브랜치 push 시).
 ## 주의사항
 
 - `package.json`에 `"type": "module"` 없으면 Vercel이 `api/mcp.js`를 Edge Middleware로 잘못 분류함
+
+## Vercel 배포 체크리스트
+
+- 레퍼런스 파일 목록 1:1 대조 먼저
+- vercel.json 없는 게 기본 구조
+- export default 쓰면 package.json에 "type": "module" 필수
+- 빌드 성공 ≠ 함수 정상 등록
+- 동일 오류 2회 → 루틴 중단 → 레퍼런스 구조 대조 → 처음부터
+- Output 탭에서 middleware 없는지 확인
+- 같은 오류 반복 시 가설 추가 말고 프레임 전환
