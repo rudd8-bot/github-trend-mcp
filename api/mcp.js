@@ -148,7 +148,8 @@ async function handleMCP(body) {
 
     if (toolName === "github_trending_ai") {
       try {
-        const period = args.period || "weekly";
+        const VALID_PERIODS = ["daily", "weekly", "monthly"];
+        const period = VALID_PERIODS.includes(args.period) ? args.period : "weekly";
         const data = await analyzeTrends(period);
         const text = formatResult(data);
         return {
@@ -158,7 +159,7 @@ async function handleMCP(body) {
       } catch (err) {
         return {
           jsonrpc: "2.0", id,
-          result: { content: [{ type: "text", text: `오류: ${err.message}` }] }
+          result: { content: [{ type: "text", text: "트렌드 수집 중 오류가 발생했습니다." }] }
         };
       }
     }
@@ -176,6 +177,13 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") return res.status(200).end();
+
+  // 인증 검증
+  const secret = process.env.MCP_SECRET;
+  const authHeader = req.headers["authorization"];
+  if (secret && authHeader !== `Bearer ${secret}`) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   const url = new URL(req.url, `https://${req.headers.host}`);
   const path = url.pathname.replace(/^\/api\/mcp/, "");
